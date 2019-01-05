@@ -8,6 +8,7 @@ struct Trie{
     int isLeaf;
     struct Trie *children[CHAR_SIZE];
     char pass;
+    struct Trie *next;
 };
 struct Trie *getNewNode(){
     int i;
@@ -27,36 +28,38 @@ void insert(struct Trie **root, char *str, char pass){
     while(*str){
 
         if(curr->children[*str - 'a']==NULL){
-            curr->children[*str -'a'] =getNewNode();}
-            count++;
-        curr = curr->children[*str - 'a'];//next node
+            curr->children[*str -'a'] =getNewNode();
+        }
+        count++;
+        curr->next = curr->children[*str - 'a'];//next node
+        curr = curr->next;
         str++;//next child
     }
 
     if(count == length)
     {
         curr->pass = pass;
-        printf("%d\n", count);
+        curr->isLeaf=1;
     }
-    curr->isLeaf=1;
+
 
 
 };
-
 
 
 int search(struct Trie *root, char *str){
-  if(root==NULL)
-      return 0; // trie is empty
-  struct Trie *curr = root;
-  while(*str){
-      curr = curr -> children[*str - 'a'];
-      if(curr==NULL)
-          return 0;
-      str++;
-  }
-  return curr->isLeaf=1;
+    if(root==NULL)
+        return 0; // trie is empty
+    struct Trie *curr = root;
+    while(*str){
+        curr = curr -> children[*str - 'a'];
+        if(curr==NULL)
+            return 0;
+        str++;
+    }
+    return curr->isLeaf=1;
 };
+
 
 int haveChildren(struct Trie *curr){
     int i;
@@ -69,12 +72,10 @@ int haveChildren(struct Trie *curr){
 
 int main() {
     struct Trie *root = getNewNode();
-    insert(&root, "adam", "324");
-    insert(&root, "adams", "352");
-    printf("%d", search(root, "adam"));
-    printf("%d", search(root, "adams"));
-    while(){
+    insert(&root, "adam", "a");
+    insert(&root, "adams", "b");
+    printf("%d \n", search(root, "adam"));
 
-    }
+
 
 }
