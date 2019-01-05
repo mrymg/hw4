@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <string.h>
+
 #include <mm_malloc.h>
 #define CHAR_SIZE 26
 
@@ -17,17 +19,31 @@ struct Trie *getNewNode(){
 };
 
 void insert(struct Trie **root, char *str, char pass){
+
     struct Trie *curr =*root;
+    size_t length = strlen(str);
+    int count = 0;
+
     while(*str){
-        if(curr->children[*str - 'a']==NULL)
-            curr->children[*str -'a'] =getNewNode();
+
+        if(curr->children[*str - 'a']==NULL){
+            curr->children[*str -'a'] =getNewNode();}
+            count++;
         curr = curr->children[*str - 'a'];//next node
         str++;//next child
     }
-    curr->isLeaf=1;
-    if(curr->isLeaf==1)
+
+    if(count == length)
+    {
         curr->pass = pass;
+        printf("%d\n", count);
+    }
+    curr->isLeaf=1;
+
+
 };
+
+
 
 int search(struct Trie *root, char *str){
   if(root==NULL)
@@ -57,4 +73,8 @@ int main() {
     insert(&root, "adams", "352");
     printf("%d", search(root, "adam"));
     printf("%d", search(root, "adams"));
+    while(){
+
+    }
+
 }
