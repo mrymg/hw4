@@ -28,10 +28,12 @@ int search(struct Trie *root, char *str){
         str++;
     }
     if(curr->pass!=NULL)
-        return curr->isLeaf=1;
+        return 1;
 
+    curr->isLeaf =1;
 
 };
+
 
 
 void insert(struct Trie **head, char *str, char *pass)
@@ -59,30 +61,7 @@ void insert(struct Trie **head, char *str, char *pass)
     curr->pass = pass;
     printf("\"%s\" was added \n", name);
 }
-int find(struct Trie* head, char* str)
-{
-    // return 0 if Trie is empty
-    if (head == NULL)
-        return 0;
 
-    struct Trie* curr = head;
-    while (*str)
-    {
-        // go to next node
-        curr = curr->children[*str - 'a'];
-
-        // if string is invalid (reached end of path in Trie)
-        if (curr == NULL)
-            return 0;
-
-        // move to next character
-        str++;
-    }
-
-    // if current node is a leaf and we have reached the
-    // end of the string, return 1
-    return curr->isLeaf;
-}
 
 // returns 1 if given node has any children
 int haveChildren(struct Trie* curr)
@@ -93,6 +72,62 @@ int haveChildren(struct Trie* curr)
 
     return 0;
 }
+void query(struct Trie *root, char *str, char *pass){
+    char *name = str;
+    int len= strlen(str);
+    struct Trie *curr = root;
+    if(curr->children[str[0]- 'a'] == NULL)
+        printf("\"%s\" - no record \n", str);
+    else {
+
+
+
+
+
+
+    }
+
+}
+
+void find(struct Trie *root, char *str){
+    int i;
+    char *name = str;
+    int len = strlen(str);
+    struct Trie *curr = root;
+    if(curr->children[str[0]- 'a'] == NULL)
+        printf("\"%s\" - no record \n", str);
+    else {
+        for (int i = 0; i < len ; i++) {
+            curr=curr->children[str[i]- 'a'];
+            if(curr){
+                printf("a ");
+            }
+        }
+
+
+
+
+
+        }
+
+
+    }
+
+
+
+
+//    while(*str){
+//        curr = curr -> children[*str - 'a'];
+//        if(curr==NULL)
+//            printf("\"%s\" no record\n", str);
+//
+//        str++;
+//    }
+
+
+
+
+
 
 int main() {
     struct Trie *root = getNewNode();
@@ -101,16 +136,20 @@ int main() {
     char lines[255];
     char *opr;
 
+
+
+
     while(fgets(lines, 255, fp)) {
         opr = strtok(lines, " ");
        if(opr[1] == 'a'){
 
            char *name;
-           char *pass;
 
+           char *pass;
            opr = strtok(NULL, " ");
            name = opr;
            opr = strtok(NULL, " ");
+
            pass=opr;
 
 
@@ -127,12 +166,20 @@ int main() {
        }
        else if(opr[1]=='q'){
            // got q
+           char *name;
+           char *pass;
            opr = strtok(NULL, " "); //got name
+           name = opr;
            opr = strtok(NULL, " "); //got pass
+           pass = opr;
+           query(root, name, pass);
        }
        else if(opr[1]=='s'){
             //got s
+           char *name;
            opr = strtok(NULL, " "); //got name
+           name = opr;
+          find(root, name);
 
        }
        else if(opr[1]=='d'){
@@ -146,6 +193,7 @@ int main() {
 
        }
 
+
     }
 
    // printf("%s parola---", root->children[14]->children[25]->children[13]->children[20]->children[17]->pass);
@@ -153,9 +201,9 @@ int main() {
 
 
 
-     //insert(&root, "ada", "ab");
 
-printf("%s \n", root->children[14]->children[25]->children[13]->children[20]->children[17]->pass);
+
+//printf("%s \n", root->children[14]->children[25]->children[13]->children[20]->children[17]->pass);
 
 
 }
