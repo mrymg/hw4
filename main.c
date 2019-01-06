@@ -77,8 +77,9 @@ void query(struct Trie *root, char *str, char *pass){
     int len= strlen(str);
     struct Trie *curr = root;
     if(curr->children[str[0]- 'a'] == NULL)
-        printf("\"%s\" - no record \n", str);
+        printf("\"%s\"  no record \n", str);
     else {
+
 
 
 
@@ -88,30 +89,29 @@ void query(struct Trie *root, char *str, char *pass){
     }
 
 }
-
 void find(struct Trie *root, char *str){
-    int i;
     char *name = str;
-    int len = strlen(str);
+    int i;
+    int len= strlen(str);
+    char *arr= malloc(sizeof(len));
+    for ( i = 0; i < len-1; i++) {
+        arr[i]=str[i];
+
+    }
     struct Trie *curr = root;
-    if(curr->children[str[0]- 'a'] == NULL)
-        printf("\"%s\" - no record \n", str);
+    if(curr->children[str[0]- 'a'] == NULL){
+        printf("\"");
+        for (i = 0; i < len-1; i++) {
+            printf("%c",arr[i]);
+        }
+        printf("\" no record\n");
+    }
     else {
-        for (int i = 0; i < len ; i++) {
-            curr=curr->children[str[i]- 'a'];
-            if(curr){
-                printf("a ");
-            }
-        }
-
-
-
-
-
-        }
 
 
     }
+
+}
 
 
 
@@ -123,8 +123,6 @@ void find(struct Trie *root, char *str){
 //
 //        str++;
 //    }
-
-
 
 
 
@@ -144,24 +142,19 @@ int main() {
        if(opr[1] == 'a'){
 
            char *name;
-
            char *pass;
            opr = strtok(NULL, " ");
            name = opr;
            opr = strtok(NULL, " ");
-
            pass=opr;
-
-
-
-
-
 
             if(search(root, name) == 1)
                 printf("\"%s\" username reserved\n", name);
             else
 
-                insert(&root, name, "password123");
+                insert(&root, name, pass);
+
+
 
        }
        else if(opr[1]=='q'){
