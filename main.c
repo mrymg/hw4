@@ -36,7 +36,7 @@ int search(struct Trie *root, char *str){
 
 
 
-void insert(struct Trie **head, char *str, char *pass)
+void insert(struct Trie **head, char *str, char *pass,FILE *out)
 {
     struct Trie *curr = *head;
     char *name = str;
@@ -58,21 +58,22 @@ void insert(struct Trie **head, char *str, char *pass)
 
     // mark current node as leaf
     curr->isLeaf = 1;
-    (*curr).pass = pass;
-    printf("\"%s\" was added \n", name);
+    curr->pass = pass;
+    fprintf(out, "\"%s\" was added \n", name);
 }
 
 
 // returns 1 if given node has any children
 int haveChildren(struct Trie* curr)
 {
-    for (int i = 0; i < CHAR_SIZE; i++)
+    int i;
+    for ( i= 0; i < CHAR_SIZE; i++)
         if (curr->children[i])
             return 1;	// child found
 
     return 0;
 }
-void query(struct Trie *root, char *str, char *pass){
+void query(struct Trie *root, char *str, char *pass,FILE *out){
     char *name = str;
     int i;
     int len= (int )strlen(str);
@@ -83,11 +84,11 @@ void query(struct Trie *root, char *str, char *pass){
     }
     struct Trie *curr = root;
     if(curr->children[str[0]- 'a'] == NULL){
-        printf("\"");
+        fprintf(out,"\"");
         for (i = 0; i < len; i++) {
-            printf("%c",arr[i]);
+            fprintf(out,"%c",arr[i]);
         }
-        printf("\" no record\n");
+        fprintf(out,"\" no record\n");
     }
     else {
         int temp = 0;
@@ -101,23 +102,25 @@ void query(struct Trie *root, char *str, char *pass){
         }
         if (temp2 == len) {
             if (haveChildren(curr) == 1) {
-                printf("\"");
+                fprintf(out,"\"");
                 for (i = 0; i < len ; i++) {
-                    printf("%c", arr[i]);
+                    fprintf(out,"%c", arr[i]);
                 }
-                printf("\" not enough username\n");
+                fprintf(out,"\" not enough username\n");
             }
-        }if(haveChildren(curr)==0){
-            printf("\"");
-            for (i = 0; i < len; i++) {
-                printf("%c",arr[i]);
+
+        }if(temp2<len){
+            fprintf(out,"\"");
+            for (i = 0; i < len ; i++) {
+                fprintf(out,"%c", arr[i]);
             }
-            printf("\" password %s\n",curr->pass);
+            fprintf(out,"\" incorrect username\n");
         }
+
 
     }
 }
-void find(struct Trie *root, char *str){
+void find(struct Trie *root, char *str,FILE *out){
     char *name = str;
     int i;
     int len= (int )strlen(str);
@@ -128,11 +131,11 @@ void find(struct Trie *root, char *str){
     }
     struct Trie *curr = root;
     if(curr->children[str[0]- 'a'] == NULL){
-        printf("\"");
+        fprintf(out,"\"");
         for (i = 0; i < len-1; i++) {
-            printf("%c",arr[i]);
+            fprintf(out,"%c",arr[i]);
         }
-        printf("\" no record\n");
+        fprintf(out,"\" no record\n");
     }
     else {
         int temp = 0;
@@ -144,27 +147,27 @@ void find(struct Trie *root, char *str){
 
             temp++;
             temp2++;}
-            if(temp2==len-1){
-                if(haveChildren(curr)==1){
-                    printf("\"");
-                    for (i = 0; i < len-1; i++) {
-                        printf("%c",arr[i]);
-                    }
-                    printf("\" not enough username\n");
-                } if(haveChildren(curr)==0){
-                    printf("\"");
-                    for (i = 0; i < len-1; i++) {
-                        printf("%c",arr[i]);
-                    }
-                    printf("\" password %s\n",curr->pass);
+        if(temp2==len-1){
+            if(haveChildren(curr)==1){
+                fprintf(out,"\"");
+                for (i = 0; i < len-1; i++) {
+                    fprintf(out,"%c",arr[i]);
                 }
-
-            }if(temp2<len-1){
-            printf("\"");
-            for (i = 0; i < len-1; i++) {
-                printf("%c",arr[i]);
+                fprintf(out,"\" not enough username\n");
+            } if(haveChildren(curr)==0){
+                fprintf(out,"\"");
+                for (i = 0; i < len-1; i++) {
+                    fprintf(out,"%c",arr[i]);
+                }
+                fprintf(out,"\" password %s\n",curr->pass);
             }
-            printf("\" incorrect username\n");
+
+        }if(temp2<len-1){
+            fprintf(out,"\"");
+            for (i = 0; i < len-1; i++) {
+                fprintf(out,"%c",arr[i]);
+            }
+            fprintf(out,"\" incorrect username\n");
 
         }
 
@@ -178,6 +181,60 @@ void find(struct Trie *root, char *str){
 
 }
 
+void deletion(struct Trie *root, char *str,FILE *out){
+    char *name = str;
+    int i;
+    int len= (int )strlen(str);
+    char *arr= malloc(sizeof(len));
+    for ( i = 0; i < len-1; i++) {
+        arr[i]=str[i];
+
+    }
+    struct Trie *curr = root;
+    if(curr->children[str[0]- 'a'] == NULL){
+        fprintf(out,"\"");
+        for (i = 0; i < len-1; i++) {
+            fprintf(out,"%c",arr[i]);
+        }
+        fprintf(out,"\" no record\n");
+    }
+    else {
+        int temp = 0;
+        int temp2 = 0;
+        while(curr->children[str[temp] - 'a'] != NULL)
+        {
+            curr = curr->children[str[temp] - 'a'];
+
+
+            temp++;
+            temp2++;}
+        if(temp2==len-1){
+            if(haveChildren(curr)==1){
+                fprintf(out,"\"");
+                for (i = 0; i < len-1; i++) {
+                    fprintf(out,"%c",arr[i]);
+                }
+                fprintf(out,"\" not enough username\n");
+            }
+
+        }if(temp2<len-1){
+            fprintf(out,"\"");
+            for (i = 0; i < len-1; i++) {
+                fprintf(out,"%c",arr[i]);
+            }
+            fprintf(out,"\" incorrect username\n");
+
+        }
+
+
+
+
+
+
+
+    }
+
+}
 
 
 
@@ -192,69 +249,75 @@ void find(struct Trie *root, char *str){
 
 
 
-int main() {
+int main(int argc, char *argv[]) {
     struct Trie *root = getNewNode();
     FILE *fp;
-    fp=fopen("input.txt", "r");
+    fp=fopen(argv[1], "r");
     char lines[255];
     char *opr;
+    char *out = argv[2]; // output file argument.
+
+    FILE *op; // output file pointer.
+    op = fopen(out,"w");
 
 
 
 
     while(fgets(lines, 255, fp)) {
         opr = strtok(lines, " ");
-       if(opr[1] == 'a'){
+        if(opr[1] == 'a'){
 
-           char *name;
-           char *pass;
-           opr = strtok(NULL, " ");
-           name = opr;
-           opr = strtok(NULL, " ");
-           pass=opr;
+            char *name;
+            char *pass;
+            opr = strtok(NULL, " ");
+            name = opr;
+            opr = strtok(NULL, " ");
+            pass=opr;
+            char str2[10];
+            strcpy(str2,pass);
 
             if(search(root, name) == 1)
-                printf("\"%s\" username reserved\n", name);
+                fprintf(op,"\"%s\" username reserved\n", name);
             else
 
-                insert(&root, name, pass);
+                insert(&root, name, str2,op);
 
 
 
-       }
-       else if(opr[1]=='q'){
-           // got q
-           char *name;
-           char *pass;
-           opr = strtok(NULL, " "); //got name
-           name = opr;
-           opr = strtok(NULL, " "); //got pass
-           pass = opr;
-           query(root, name, pass);
-       }
-       else if(opr[1]=='s'){
+        }
+        else if(opr[1]=='q'){
+            // got q
+            char *name;
+            char *pass;
+            opr = strtok(NULL, " "); //got name
+            name = opr;
+            opr = strtok(NULL, " "); //got pass
+            pass = opr;
+            query(root, name, pass,op);
+        }
+        else if(opr[1]=='s'){
             //got s
-           char *name;
-           opr = strtok(NULL, " "); //got name
-           name = opr;
-          find(root, name);
+            char *name;
+            opr = strtok(NULL, " "); //got name
+            name = opr;
+            find(root, name,op);
 
-       }
-       else if(opr[1]=='d'){
-           //got d
-           opr = strtok(NULL, " "); //got name
+        }
+        else if(opr[1]=='d'){
+            //got d
+            opr = strtok(NULL, " "); //got name
+            deletion(root, opr,op);
+        }
+        else if(opr[1]=='l'){
+            // got l
 
-       }
-       else if(opr[1]=='l'){
-           // got l
 
-
-       }
+        }
 
 
     }
 
-   // printf("%s parola---", root->children[14]->children[25]->children[13]->children[20]->children[17]->pass);
+    // printf("%s parola---", root->children[14]->children[25]->children[13]->children[20]->children[17]->pass);
 
 
 
