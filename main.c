@@ -58,7 +58,7 @@ void insert(struct Trie **head, char *str, char *pass)
 
     // mark current node as leaf
     curr->isLeaf = 1;
-    curr->pass = pass;
+    (*curr).pass = pass;
     printf("\"%s\" was added \n", name);
 }
 
@@ -74,25 +74,53 @@ int haveChildren(struct Trie* curr)
 }
 void query(struct Trie *root, char *str, char *pass){
     char *name = str;
-    int len= strlen(str);
-    struct Trie *curr = root;
-    if(curr->children[str[0]- 'a'] == NULL)
-        printf("\"%s\"  no record \n", str);
-    else {
-
-
-
-
-
-
+    int i;
+    int len= (int )strlen(str);
+    char *arr= malloc(sizeof(len));
+    for ( i = 0; i < len; i++) {
+        arr[i]=str[i];
 
     }
+    struct Trie *curr = root;
+    if(curr->children[str[0]- 'a'] == NULL){
+        printf("\"");
+        for (i = 0; i < len; i++) {
+            printf("%c",arr[i]);
+        }
+        printf("\" no record\n");
+    }
+    else {
+        int temp = 0;
+        int temp2 = 0;
+        while (curr->children[str[temp] - 'a'] != NULL) {
+            curr = curr->children[str[temp] - 'a'];
 
+
+            temp++;
+            temp2++;
+        }
+        if (temp2 == len) {
+            if (haveChildren(curr) == 1) {
+                printf("\"");
+                for (i = 0; i < len ; i++) {
+                    printf("%c", arr[i]);
+                }
+                printf("\" not enough username\n");
+            }
+        }if(haveChildren(curr)==0){
+            printf("\"");
+            for (i = 0; i < len; i++) {
+                printf("%c",arr[i]);
+            }
+            printf("\" password %s\n",curr->pass);
+        }
+
+    }
 }
 void find(struct Trie *root, char *str){
     char *name = str;
     int i;
-    int len= strlen(str);
+    int len= (int )strlen(str);
     char *arr= malloc(sizeof(len));
     for ( i = 0; i < len-1; i++) {
         arr[i]=str[i];
@@ -107,6 +135,43 @@ void find(struct Trie *root, char *str){
         printf("\" no record\n");
     }
     else {
+        int temp = 0;
+        int temp2 = 0;
+        while(curr->children[str[temp] - 'a'] != NULL)
+        {
+            curr = curr->children[str[temp] - 'a'];
+
+
+            temp++;
+            temp2++;}
+            if(temp2==len-1){
+                if(haveChildren(curr)==1){
+                    printf("\"");
+                    for (i = 0; i < len-1; i++) {
+                        printf("%c",arr[i]);
+                    }
+                    printf("\" not enough username\n");
+                } if(haveChildren(curr)==0){
+                    printf("\"");
+                    for (i = 0; i < len-1; i++) {
+                        printf("%c",arr[i]);
+                    }
+                    printf("\" password %s\n",curr->pass);
+                }
+
+            }if(temp2<len-1){
+            printf("\"");
+            for (i = 0; i < len-1; i++) {
+                printf("%c",arr[i]);
+            }
+            printf("\" incorrect username\n");
+
+        }
+
+
+
+
+
 
 
     }
